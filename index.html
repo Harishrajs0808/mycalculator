@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="logo" href="logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <title>Calculator</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .navbar {
+            width: 100%;
+            background: #333;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 20px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index:0;
+        }
+
+        .menu {
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: none;
+            flex-direction: column;
+            background: #444;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            width: 100%;
+            padding: 10px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            display: block;
+        }
+
+        .nav-links.active {
+            display: flex;
+        }
+
+        .calculator {
+            margin-top: 60px;
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+        }
+
+        .display {
+            width: 100%;
+            height: 60px;
+            text-align: right;
+            font-size: 2em;
+            border: none;
+            margin-bottom: 10px;
+            background: #eee;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            padding: 20px;
+            font-size: 1.5em;
+            border: none;
+            background: #ddd;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:active {
+            background: #bbb;
+        }
+
+        .equals {
+            background: #007bff;
+            color: white;
+        }
+        .sidebar {
+            position: absolute;
+            top: 0;
+            left: -250px;
+            width: 200px;
+            height: 100%;
+            background: white;
+            box-shadow: 2px 0px 10px rgba(0,0,0,0.2);
+            padding: 10px;
+            transition: left 0.3s ease-in-out;
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar h3 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .close-sidebar {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            font-weight: bold;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 10px;
+            padding-top: 30px;
+            text-decoration: none;
+            color: black;
+        }
+
+        .sidebar h1{
+            padding-top: 15px;
+            padding-left: 10px;
+        }
+        .menu-container {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        .menu-text {
+            margin-top: 5px;
+            margin-left: 50px;
+            font-size: 30px;
+            font-weight: bold;
+        }
+        .history-btn {
+            z-index: 1;
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .backspace {
+            background: #ff4136;
+            color: white;
+        }
+        .backspace:active {
+            background: #c0392b;
+        }
+        .history-panel {
+            position: absolute;
+            top: 0;
+            right: -250px;
+            width: 200px;
+            height: 100%;
+            background: white;
+            box-shadow: -2px 0px 10px rgba(0,0,0,0.2);
+            padding: 10px;
+            transition: right 0.3s ease-in-out;
+            overflow-y: auto;
+        }
+        .history-panel.active {
+            right: 0;
+        }
+        .history-panel h3 {
+            margin: 0 0 10px 0;
+            text-align: center;
+        }
+        .close-history {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            font-weight: bold;
+        }
+
+        .dark-mode {
+            background-color: #121212;
+            color: white;
+        }
+        .dark-mode .sidebar, .dark-mode .close-sidebar, .dark-mode a, .dark-mode .calculator, .dark-mode .history-panel, .dark-mode footer {
+            background-color: #222;
+            color: white;
+        }
+        .dark-mode button, .dark-mode .display {
+            background-color: #444;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="menu-container">
+                <div class="menu" onclick="toggleMenu()">☰</div>
+                <div class="menu-text"> My Calculator</div>
+            </div>
+            <div class="history-btn"><i class="fas fa-history"></i></div>
+        </nav>
+    </header>
+    <div class="sidebar" id="sidebar">
+        <button class="close-sidebar" onclick="toggleSidebar()">&#10006;</button>
+        <h1>Menu</h1>
+        <a href="settings.html"><i class="fa fa-cog" aria-hidden="true"></i> Settings</a>
+    </div>
+
+    <div class="calculator">
+        <input type="text" class="display" disabled>
+        <div class="buttons">
+            <button>%</button>
+            <button>CE</button>
+            <button>C</button>
+            <button class="backspace">&#9003;</button>
+            <button>1/x</button>
+            <button>x²</button>
+            <button>√x</button>
+            <button>÷</button>
+            <button>7</button>
+            <button>8</button>
+            <button>9</button>
+            <button>×</button>
+            <button>4</button>
+            <button>5</button>
+            <button>6</button>
+            <button>-</button>
+            <button>1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>+</button>
+            <button>+/-</button>
+            <button>0</button>
+            <button>.</button>
+            <button class="equals">=</button>
+        </div>
+    </div>
+    <div class="history-panel">
+        <button class="close-history" onclick="closeHistoryPanel()">&#10006;</button>
+        <h1>History</h1>
+        <br><br><br>
+        <ul class="history-list"></ul>
+    </div>
+    <script>
+        let display = document.querySelector('.display');
+        let buttons = document.querySelectorAll('.buttons button');
+        let historyBtn = document.querySelector('.history-btn');
+        let historyPanel = document.querySelector('.history-panel');
+        let historyList = document.querySelector('.history-list');
+        let expression = '';
+        let history = [];
+
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                handleInput(button.textContent.trim());
+            });
+        });
+
+        document.addEventListener('keydown', (event) => {
+            let key = event.key;
+            
+            if (!isNaN(key) || "+-*/.=()%".includes(key)) {
+                handleInput(key);
+            } else if (key === "Enter") {
+                handleInput("=");
+            } else if (key === "Backspace") {
+                handleInput("⌫");
+            } else if (key === "Escape") {
+                handleInput("C");
+            }
+        });
+
+        function handleInput(value) {
+            if (value === '=') {
+                try {
+                    let result = eval(expression.replace(/×/g, '*').replace(/÷/g, '/'));
+                    history.push(`${expression} = ${result}`);
+                    updateHistory();
+                    expression = result.toString();
+                } catch {
+                    expression = 'Error';
+                }
+            } else if (value === 'C') {
+                expression = '';
+            } else if (value === '⌫') {
+                expression = expression.slice(0, -1);
+            } else if (value === '%') {
+                expression = (parseFloat(expression) / 100).toString();
+            } else if (value === 'x²') {
+                expression = Math.pow(eval(expression), 2).toString();
+            } else if (value === '√x') {
+                expression = Math.sqrt(eval(expression)).toString();
+            } else if (value === '1/x') {
+                expression = (1 / eval(expression)).toString();
+            } else {
+                expression += value;
+            }
+
+            display.value = expression;
+        }
+
+        historyBtn.addEventListener('click', () => {
+            historyPanel.classList.toggle('active');
+        });
+
+        function closeHistoryPanel() {
+            historyPanel.classList.remove('active');
+        }
+
+        function updateHistory() {
+            historyList.innerHTML = history.map(item => `<li>${item}</li>`).join('');
+        }
+        function toggleMenu() {
+            let sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("active");
+        }
+
+        function toggleSidebar() {
+            let sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("active");
+        }
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            if (localStorage.getItem("theme") === "dark") {
+                document.body.classList.add("dark-mode");
+            } else {
+                document.body.classList.remove("dark-mode");
+            }
+        });
+
+    </script>
+</body>
+</html>
+

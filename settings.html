@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="logo" href="logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            transition: background 0.3s, color 0.3s;
+        }
+        
+        .navbar {
+            width: 100%;
+            background: #333;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .menu {
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .settings-container {
+            max-width: 600px;
+            margin: 80px auto;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 25px;
+        }
+        
+        .toggle-switch input {
+            display: none;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #ccc;
+            transition: 0.4s;
+            border-radius: 25px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background: #007bff;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+        
+        footer {
+            margin-top: 150px;
+            text-align: center;
+            align-items: center;
+            padding: 10px;
+            width: 100%;
+            bottom: 0
+        }
+
+        .dark-mode {
+            background: #222;
+            color: white;
+        }
+        
+        .dark-mode .settings-container, .dark-mode footer {
+            background: #333;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div>
+                <a style="color: white;" href="index.html"><i class="fa fa-home" aria-hidden="true"></i></a>
+            </div>
+            <div>Settings</div>
+        </nav>
+    </header>
+    
+    <div class="settings-container">
+        <h2>Appearance</h2>
+        <div class="toggle-container">
+            <span>Dark Mode</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="darkModeToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+    <div class="settings-container">
+        <h2>Feedback</h2>
+        <div class="toggle-container">
+            <span>Send through linkedin</span>
+            <label class="toggle-switch">
+                <a href="https://www.linkedin.com/in/mrharishraj?">
+                  <img src="linkedin.png" alt="linkedin">
+                </a>
+            </label>
+        </div>
+    </div>
+    
+    <script>
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        
+        darkModeToggle.addEventListener('change', function() {
+            document.body.classList.toggle('dark-mode', this.checked);
+            localStorage.setItem('theme', this.checked ? 'dark' : 'light');
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const darkMode = localStorage.getItem('theme') === 'dark';
+            document.body.classList.toggle('dark-mode', darkMode);
+        });
+
+    </script>
+</body>
+<footer>
+    <p>&copy; 2025 My Calculator. All rights reserved.</p>
+    <a>
+        To learn how you can contribute to My Calculator, check out the project on
+    </a>
+    <a href="https://www.github.com/Harishrajs0808">GitHub.</a>
+</footer>
+</html>
+
